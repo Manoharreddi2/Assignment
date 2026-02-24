@@ -2,11 +2,15 @@
 
 This project demonstrates the containerization and automated deployment of a full-stack MEAN (MongoDB, Express, Angular, Node.js) application using Docker, GitHub Actions, and Nginx.
 
+![Application UI](screenshots/app-ui.png)
+
 ## 🚀 Application Details
 *   **Application Access URL**: [http://18.61.78.170](http://18.61.78.170)
 *   **DockerHub Repositories**:
     *   `manohar193/mean-frontend`
     *   `manohar193/mean-backend`
+
+![Docker Hub Repositories](screenshots/docker-hub.png)
 
 ## ☁️ Infrastructure Overview
 *   **Cloud Platform**: AWS EC2
@@ -50,11 +54,15 @@ The application is deployed using `docker-compose.yml` on the EC2 instance:
     docker compose up -d
     ```
 
+![EC2 Deployment Status](screenshots/ec2-deployment.png)
+
 ### 🔹 5. GitHub Actions CI/CD Steps
 The `.github/workflows/main.yml` automates the entire flow:
 1.  **Build & Push**: Builds Docker images and pushes to DockerHub on every push to `main`.
 2.  **SCP Transfer**: Automatically copies the `docker-compose.yml` and `nginx/nginx.conf` to the EC2 instance.
 3.  **SSH Deploy**: Connects to the EC2 instance via SSH, pulls the latest images, and restarts the containers.
+
+![GitHub Actions Workflow](screenshots/github-actions.png)
 
 ### 🔹 6. Nginx Setup
 Nginx acts as the entry point for the application on **Port 80**:
