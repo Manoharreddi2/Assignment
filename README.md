@@ -1,67 +1,79 @@
-In this DevOps task, i built and deployed a full-stack CRUD application using the MEAN stack (MongoDB, Express, Angular 15, and Node.js). The backend will be developed with Node.js and Express to provide REST APIs, connecting to a MongoDB database. The frontend will be an Angular application utilizing HTTPClient for communication.  
+# MEAN Stack CRUD Application - DevOps Containerization & Deployment
 
-The application will manage a collection of tutorials, where each tutorial includes an ID, title, description, and published status. Users will be able to create, retrieve, update, and delete tutorials. Additionally, a search box will allow users to find tutorials by title.
+This project demonstrates the containerization and automated deployment of a full-stack MEAN (MongoDB, Express, Angular, Node.js) application using Docker, GitHub Actions, and Nginx.
 
-## Containerization with Docker
+## 🚀 Application Details
+*   **Application Access URL**: [http://18.61.78.170](http://18.61.78.170)
+*   **DockerHub Repositories**:
+    *   `manohar193/mean-frontend`
+    *   `manohar193/mean-backend`
 
-This project is fully containerized using Docker and Docker Compose.
-
-### Local Setup
-
-To run the entire stack locally:
-
-1. Ensure you have Docker and Docker Compose installed.
-2. Run the following command in the root directory:
-   ```bash
-   docker-compose up --build
-   ```
-3. The frontend will be accessible at `http://localhost`.
-4. The backend API will be at `http://localhost/api`.
-5. MongoDB will be running on port `27017`.
-
-## Deployment to Ubuntu VM
-
-### 1. Prerequisites
-- An Ubuntu VM (AWS EC2, Azure VM, etc.).
-- Docker and Docker Compose installed on the VM.
-- Port 80 (HTTP) open in the VM's security group/firewall.
-
-### 2. CI/CD Pipeline (GitHub Actions)
-The project includes a GitHub Actions workflow in `.github/workflows/main.yml`. To enable it:
-
-1. Create a new GitHub repository and push this code.
-2. In your GitHub Repo, go to **Settings > Secrets and variables > Actions**.
-3. Add the following secrets:
-   - `DOCKER_USERNAME`: Your Docker Hub username.
-   - `DOCKER_PASSWORD`: Your Docker Hub personal access token or password.
-   - `SSH_HOST`: The public IP address of your VM.
-   - `SSH_USER`: The username for the VM (usually `ubuntu`).
-   - `SSH_PRIVATE_KEY`: Your private SSH key (`.pem` file content) used to access the VM.
-
-### 3. VM Preparation
-On your VM, create the target directory:
-```bash
-mkdir -p ~/crud-dd-task-mean-app
-```
-And copy the `docker-compose.yml` and `nginx/nginx.conf` to the VM (The CI/CD script assumes they are in that folder). 
-
-## Nginx Reverse Proxy
-Nginx is configured to:
-- Serve the Angular static files.
-- Proxy all `/api` requests to the Node.js backend on port 8080.
-- Handle SPA routing (redirecting 404s to `index.html`).
+## ☁️ Infrastructure Overview
+*   **Cloud Platform**: AWS EC2
+*   **Operating System**: Amazon Linux 2023
+*   **Instance Type**: t3.micro
+*   **Web Server**: Nginx (Reverse Proxy)
+*   **Database**: MongoDB (Official Docker Image)
 
 ---
-Finalized for deployment on February 24, 2026.
 
-SSH FIX DONE
+## 🛠️ Project Setup & Configuration
 
-FINAL SSH FIX
+### 🔹 1. Project Setup Steps
+The application consists of a Node.js backend (`/backend`) and an Angular frontend (`/frontend`).
+1.  **Backend**: Express.js server providing REST APIs for managing tutorials.
+2.  **Frontend**: Angular application using `HttpClient` for API communication.
+3.  **Database**: MongoDB stores tutorial data (Title, Description, Published status).
 
-FINAL EC2 READY
+### 🔹 2. Docker Build Steps
+Each component has its own `Dockerfile`:
+*   **Backend Dockerfile**: Uses `node:18-alpine` to build and serve the Express app.
+*   **Frontend Dockerfile**: Multi-stage build (Node.js for building, Nginx for serving the production files).
+*   **Build Command**:
+    ```bash
+    docker compose build
+    ```
 
-BUILDX INSTALLED
+### 🔹 3. DockerHub Push Steps
+The build process is automated via GitHub Actions:
+1.  Images are tagged as `latest`.
+2.  Authenticated via DockerHub Access Tokens.
+3.  Pushed to `manohar193/mean-backend` and `manohar193/mean-frontend`.
 
-LATEST BUILDX
+### 🔹 4. EC2 Deployment Steps
+The application is deployed using `docker-compose.yml` on the EC2 instance:
+1.  The `docker-compose.yml` defines three services: `frontend`, `backend`, and `mongodb`.
+2.  **Network**: All services communicate over a bridge network.
+3.  **Command to Deploy**:
+    ```bash
+    docker compose pull
+    docker compose up -d
+    ```
 
-PIPELINE RETRY
+### 🔹 5. GitHub Actions CI/CD Steps
+The `.github/workflows/main.yml` automates the entire flow:
+1.  **Build & Push**: Builds Docker images and pushes to DockerHub on every push to `main`.
+2.  **SCP Transfer**: Automatically copies the `docker-compose.yml` and `nginx/nginx.conf` to the EC2 instance.
+3.  **SSH Deploy**: Connects to the EC2 instance via SSH, pulls the latest images, and restarts the containers.
+
+### 🔹 6. Nginx Setup
+Nginx acts as the entry point for the application on **Port 80**:
+*   Serves the Angular static files.
+*   Proxies all `/api` requests to the Node.js backend.
+*   Handles Single Page Application (SPA) routing to prevent 404 errors on browser refresh.
+
+### 🔹 7. MongoDB Setup
+*   **Deployment**: Official MongoDB Docker image is integrated within the `docker-compose.yml`.
+*   **Persistence**: Data is kept consistent within the container-based setup.
+*   **Connectivity**: The backend connects to `mongodb:27017` using environment variables.
+
+---
+
+## ✅ Deployment Checklist & Verification
+- [x] **Angular UI**: Accessible at Port 80.
+- [x] **REST API**: Forwarded via Nginx to the backend service.
+- [x] **Auto Deployment**: Triggered by GitHub Actions on code changes.
+- [x] **Infrastructure**: AWS EC2 instance running Amazon Linux 2023.
+
+---
+*Created as part of the Technical Assignment for Discover Dollar Inc.*
