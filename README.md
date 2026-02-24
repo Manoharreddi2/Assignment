@@ -50,3 +50,6 @@ Nginx is configured to:
 - Serve the Angular static files.
 - Proxy all `/api` requests to the Node.js backend on port 8080.
 - Handle SPA routing (redirecting 404s to `index.html`).
+
+---
+Finalized for deployment on February 24, 2026.
