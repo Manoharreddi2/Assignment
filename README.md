@@ -5,7 +5,7 @@ This project demonstrates the containerization and automated deployment of a ful
 ![Application UI](screenshots/app-ui.png)
 
 ## 🚀 Application Details
-*   **Application Access URL**: [http://18.61.78.170](http://18.61.78.170)
+*   //**Application Access URL**: [http://18.61.78.170](http://18.61.78.170)
 *   **DockerHub Repositories**:
     *   `manohar193/mean-frontend`
     *   `manohar193/mean-backend`
